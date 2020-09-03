@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiscordBotTicTacToe.Core.Game
 {
-    class PlayerController
+    internal class PlayerController
     {
         public PlayerPair Players { get; private set; }
         public int CurrentPlayer { get; private set; }
@@ -19,6 +17,7 @@ namespace DiscordBotTicTacToe.Core.Game
         {
             return Players.PlayerID2 != 0;
         }
+
         public void NextMove()
         {
             CurrentPlayer++;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DiscordBotTicTacToe.Commands
 {
-    class GameCommands
+    internal class GameCommands
     {
         private Dictionary<PlayerPair, GameLogic> games = new Dictionary<PlayerPair, GameLogic>();
 
@@ -21,8 +21,8 @@ namespace DiscordBotTicTacToe.Commands
             _playerService = playerService;
         }
 
-        [Description("Start a search for a player to play Tic Tac Toe")]
-        [Command("start")]                                                                                                          
+        [Description("Start a search for a user to play Tic Tac Toe")]
+        [Command("start")]
         public async Task Start(CommandContext ctx)
         {
             var player = await _playerService.GetOrCreatePlayer(ctx.User.Id, ctx.Guild.Id);
@@ -49,9 +49,9 @@ namespace DiscordBotTicTacToe.Commands
 
             bool gotReaction = false;
 
-            while(!gotReaction)
+            while (!gotReaction)
             {
-                var reactionResult = await interactivity.WaitForReactionAsync(x => x == waveEmoji); 
+                var reactionResult = await interactivity.WaitForReactionAsync(x => x == waveEmoji);
                 if (reactionResult == null)
                 {
                     await ctx.Channel.SendMessageAsync("No one responded, closing the game");
@@ -69,13 +69,11 @@ namespace DiscordBotTicTacToe.Commands
                     await PlayGame(ctx, reactionResult.User, pair);
                 }
             }
-
-            
         }
 
         [Description("Challenge a user to play Tic Tac Toe")]
         [Command("duel")]
-        public async Task Duel(CommandContext ctx, [Description("Specify a user via @username")] DiscordMember opponent)                                                      
+        public async Task Duel(CommandContext ctx, [Description("Specify a user via @username")] DiscordMember opponent)
         {
             var player = await _playerService.GetOrCreatePlayer(ctx.User.Id, ctx.Guild.Id);
             if (player.isBanned)
@@ -83,10 +81,9 @@ namespace DiscordBotTicTacToe.Commands
                 await ctx.Channel.SendMessageAsync(":clown:");
                 return;
             }
-            
 
             var pair = new PlayerPair(ctx.User.Id, opponent.Id);
-            if(games.ContainsKey(pair))
+            if (games.ContainsKey(pair))
             {
                 var message = await ctx.Channel.SendMessageAsync("Either user is already playing a game, get him to finish that one first!");
                 return;
@@ -99,7 +96,7 @@ namespace DiscordBotTicTacToe.Commands
             //Fix later just testing
             if (opponent != null)
             {
-                if(opponent == ctx.Client.CurrentUser)
+                if (opponent == ctx.Client.CurrentUser)
                 {
                     await ctx.Channel.SendMessageAsync("You cannot duel me, mortal!");
                 }
@@ -119,15 +116,14 @@ namespace DiscordBotTicTacToe.Commands
 
                     var messageResult = await interactivity.WaitForMessageAsync(x => x.Author == opponent, TimeSpan.FromMinutes(2));
 
-                    if(messageResult!=null  && messageResult.Message !=null && messageResult.Message.Content.ToLower() =="y")
+                    if (messageResult != null && messageResult.Message != null && messageResult.Message.Content.ToLower() == "y")
                     {
                         await PlayGame(ctx, opponent, pair);
                     }
                     else
                     {
-                        await ctx.Channel.SendMessageAsync(opponent.Username+ " has declined a duel");
+                        await ctx.Channel.SendMessageAsync(opponent.Username + " has declined a duel");
                     }
-                    
                 }
             }
             else
@@ -135,10 +131,11 @@ namespace DiscordBotTicTacToe.Commands
                 await ctx.Channel.SendMessageAsync("User with this nickname does not exist");
             }
         }
+
         private async Task PlayGame(CommandContext ctx, DiscordUser opponent, PlayerPair pair)
         {
             GameLogic game;
-            if(games.ContainsKey(pair))
+            if (games.ContainsKey(pair))
             {
                 game = games[pair];
             }
@@ -147,7 +144,7 @@ namespace DiscordBotTicTacToe.Commands
                 game = new GameLogic(pair.PlayerID1, pair.PlayerID2);
                 games.Add(pair, game);
             }
-            
+
             var interactivity = ctx.Client.GetInteractivityModule();
             string info = string.Empty;
 
@@ -168,7 +165,7 @@ namespace DiscordBotTicTacToe.Commands
                 int currentPlayer = game.PController.CurrentPlayer;
                 if (currentPlayer == 0)
                 {
-                    info = "Current turn: " + ctx.Member.Username + ", playing as :x:" + "\n Write a position in format X Y";    
+                    info = "Current turn: " + ctx.Member.Username + ", playing as :x:" + "\n Write a position in format X Y";
                 }
                 else if (currentPlayer == 1)
                 {
@@ -191,9 +188,9 @@ namespace DiscordBotTicTacToe.Commands
                 && char.IsDigit(x.Content, 0)
                 && char.IsWhiteSpace(x.Content, 1)
                 && char.IsDigit(x.Content, 2),
-                TimeSpan.FromMinutes(2));                                                                                          
+                TimeSpan.FromMinutes(2));
 
-                if(messageResult == null || messageResult.Message == null)
+                if (messageResult == null || messageResult.Message == null)
                 {
                     if (game.PController.CurrentPlayer == 0)
                         currentState = GameState.OwinByDc;
@@ -222,6 +219,7 @@ namespace DiscordBotTicTacToe.Commands
                     player2.Losses++;
                     await _playerService.UpdatePlayer(player2);
                     break;
+
                 case GameState.Owin:
                     info = "GG EZ for " + opponent.Username + ":crown:";
                     winnerUrl = opponent.AvatarUrl;
@@ -230,22 +228,25 @@ namespace DiscordBotTicTacToe.Commands
                     player1.Losses++;
                     await _playerService.UpdatePlayer(player1);
                     break;
+
                 case GameState.XwinByDc:
-                    info = "GG EZ for " + ctx.Member.Username + ":crown: \n"+opponent.Username+" flew :man_running:";
+                    info = "GG EZ for " + ctx.Member.Username + ":crown: \n" + opponent.Username + " flew :man_running:";
                     winnerUrl = ctx.Member.AvatarUrl;
                     player1.Wins++;
                     await _playerService.UpdatePlayer(player1);
                     player2.Abandons++;
                     await _playerService.UpdatePlayer(player2);
                     break;
+
                 case GameState.OwinByDc:
-                    info = "GG EZ for " + opponent.Username + ":crown: \n" + ctx.User.Username+ " flew :man_running:";
+                    info = "GG EZ for " + opponent.Username + ":crown: \n" + ctx.User.Username + " flew :man_running:";
                     winnerUrl = opponent.AvatarUrl;
                     player2.Wins++;
                     await _playerService.UpdatePlayer(player2);
                     player1.Abandons++;
                     await _playerService.UpdatePlayer(player1);
                     break;
+
                 case GameState.Tie:
                     info = "It's a tie this time :necktie:";
                     break;
@@ -264,6 +265,4 @@ namespace DiscordBotTicTacToe.Commands
             var endMessage = await ctx.Channel.SendMessageAsync(embed: finishEmbed);
         }
     }
-
-   
 }

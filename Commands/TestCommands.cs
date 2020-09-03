@@ -1,11 +1,5 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
-using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBotTicTacToe.Commands
@@ -17,7 +11,5 @@ namespace DiscordBotTicTacToe.Commands
         {
             await ctx.Channel.SendMessageAsync("Pong");
         }
-
-
     }
 }

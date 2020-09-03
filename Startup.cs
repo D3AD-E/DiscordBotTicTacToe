@@ -1,11 +1,9 @@
-
+using DiscordBotTicTacToe.Core.Services;
+using DiscordBotTicTacToe.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using DiscordBotTicTacToe.DAL;
-using DiscordBotTicTacToe.Core.Services;
 
 namespace DiscordBotTicTacToe
 {
@@ -13,7 +11,6 @@ namespace DiscordBotTicTacToe
     {
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<TicTacToeContext>(options =>
             {
                 options.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;MultipleActiveResultSets=true",
@@ -32,7 +29,6 @@ namespace DiscordBotTicTacToe
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
         }
     }
 }

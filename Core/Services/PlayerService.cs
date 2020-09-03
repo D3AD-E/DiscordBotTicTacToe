@@ -9,7 +9,7 @@ namespace DiscordBotTicTacToe.Core.Services
 {
     public interface IPlayerService
     {
-        List<Player> GetPlayersByUserId(ulong id);              
+        List<Player> GetPlayersByUserId(ulong id);
 
         Task<Player> GetOrCreatePlayer(ulong discordId, ulong guildId);
 
@@ -22,13 +22,13 @@ namespace DiscordBotTicTacToe.Core.Services
 
     public class PlayerService : IPlayerService
     {
-
         private readonly DbContextOptions<TicTacToeContext> _options;
 
         public PlayerService(DbContextOptions<TicTacToeContext> options)
         {
             _options = options;
         }
+
         public List<Player> GetPlayersByUserId(ulong id)
         {
             using var context = new TicTacToeContext(_options);
@@ -36,7 +36,7 @@ namespace DiscordBotTicTacToe.Core.Services
 
             List<Player> toret = new List<Player>();
 
-            foreach(var player in players)
+            foreach (var player in players)
             {
                 toret.Add(player);
             }
@@ -72,9 +72,9 @@ namespace DiscordBotTicTacToe.Core.Services
             var profile = await context.Players
                 .Where(x => x.GuildId == guildId).FirstOrDefaultAsync(x => x.UserId == discordId);
 
-            if (profile != null) 
-            { 
-                return profile; 
+            if (profile != null)
+            {
+                return profile;
             }
 
             profile = new Player
@@ -98,7 +98,7 @@ namespace DiscordBotTicTacToe.Core.Services
         {
             using var context = new TicTacToeContext(_options);
 
-            return  await context.Players
+            return await context.Players
                 .Where(x => x.GuildId == guildId).FirstOrDefaultAsync(x => x.UserId == discordId);
         }
     }

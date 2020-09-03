@@ -6,14 +6,12 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBotTicTacToe
 {
-    class Bot
+    internal class Bot
     {
         public DiscordClient Client { get; private set; }
 
@@ -25,7 +23,6 @@ namespace DiscordBotTicTacToe
         {
             _provider = provider;
             _service = (IPlayerService)provider.GetService(typeof(IPlayerService));
-
 
             var json = String.Empty;
             using (var fs = File.OpenRead("config.json"))
@@ -62,7 +59,6 @@ namespace DiscordBotTicTacToe
                 Dependencies = deps
             };
 
-            
             Commands = Client.UseCommandsNext(commandsConfig);
 
             //Commands.RegisterCommands<TestCommands>();
