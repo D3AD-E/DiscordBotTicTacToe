@@ -71,7 +71,7 @@ namespace DiscordBotTicTacToe
         {
             using var deps = new DependencyCollectionBuilder();
 
-            deps.AddInstance(_provider).AddInstance(_service);                      //???????????????
+            deps.AddInstance(_provider).AddInstance(_service);                     
 
             return deps.Build();
         }
