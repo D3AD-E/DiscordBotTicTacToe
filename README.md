@@ -39,7 +39,7 @@
 - dotnet tool install --global dotnet-ef  
 - Open git bash in core project and use command: dotnet add package Microsoft.EntityFrameworkCore.Design   
 - dotnet-ef migrations add InitialCreate -p (path to DiscordBotTicTacToe.DAL.Migrations.csproj) --context DiscordBotTicTacToe.DAL.TicTacToeContext
-- dotnet-ef database update -p (path to iscordBotTicTacToe.DAL.Migrations.csproj)--context DiscordBotTicTacToe.DAL.TicTacToeContext
+- dotnet-ef database update -p (path to DiscordBotTicTacToe.DAL.Migrations.csproj)--context DiscordBotTicTacToe.DAL.TicTacToeContext
 
 ## Usage 
 
